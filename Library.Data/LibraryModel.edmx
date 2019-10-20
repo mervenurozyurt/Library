@@ -1,0 +1,514 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="LibraryDBModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="Books">
+          <Key>
+            <PropertyRef Name="BookId" />
+          </Key>
+          <Property Name="BookId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="BookName" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="GenreId" Type="tinyint" Nullable="false" />
+          <Property Name="Author" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="PublishDate" Type="datetime" Nullable="false" />
+          <Property Name="UnitsInStock" Type="int" Nullable="false" />
+          <Property Name="RecordStatusId" Type="tinyint" Nullable="false" />
+          <Property Name="CreatedDate" Type="datetime" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Borrows">
+          <Key>
+            <PropertyRef Name="BorrowId" />
+          </Key>
+          <Property Name="BorrowId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="StudentId" Type="int" Nullable="false" />
+          <Property Name="BookId" Type="int" Nullable="false" />
+          <Property Name="BeginDate" Type="datetime" Nullable="false" />
+          <Property Name="EndDate" Type="datetime" Nullable="false" />
+          <Property Name="ReturnDate" Type="datetime" />
+        </EntityType>
+        <EntityType Name="Genres">
+          <Key>
+            <PropertyRef Name="GenreId" />
+          </Key>
+          <Property Name="GenreId" Type="tinyint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="GenreName" Type="nvarchar" MaxLength="50" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Penalties">
+          <Key>
+            <PropertyRef Name="PenaltyId" />
+          </Key>
+          <Property Name="PenaltyId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="BorrowId" Type="int" Nullable="false" />
+          <Property Name="Penalty" Type="money" Nullable="false" />
+        </EntityType>
+        <EntityType Name="RecordStatuses">
+          <Key>
+            <PropertyRef Name="RecordStatusId" />
+          </Key>
+          <Property Name="RecordStatusId" Type="tinyint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="RecordStatusName" Type="nvarchar" MaxLength="50" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Students">
+          <Key>
+            <PropertyRef Name="StudentId" />
+          </Key>
+          <Property Name="StudentId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="FirstName" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="LastName" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="StudentNumber" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="MobilePhone" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="EmailAdress" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="RecordStatusId" Type="tinyint" Nullable="false" />
+          <Property Name="CreatedDate" Type="datetime" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Users">
+          <Key>
+            <PropertyRef Name="UserId" />
+          </Key>
+          <Property Name="UserId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="FirstName" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="LastName" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="UserName" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="Password" Type="nvarchar" MaxLength="10" Nullable="false" />
+          <Property Name="RecordStatusId" Type="tinyint" Nullable="false" />
+        </EntityType>
+        <Association Name="FK_Books_Genres">
+          <End Role="Genres" Type="Self.Genres" Multiplicity="1" />
+          <End Role="Books" Type="Self.Books" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Genres">
+              <PropertyRef Name="GenreId" />
+            </Principal>
+            <Dependent Role="Books">
+              <PropertyRef Name="GenreId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Books_RecordStatuses">
+          <End Role="RecordStatuses" Type="Self.RecordStatuses" Multiplicity="1" />
+          <End Role="Books" Type="Self.Books" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="RecordStatuses">
+              <PropertyRef Name="RecordStatusId" />
+            </Principal>
+            <Dependent Role="Books">
+              <PropertyRef Name="RecordStatusId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Borrows_Books">
+          <End Role="Books" Type="Self.Books" Multiplicity="1" />
+          <End Role="Borrows" Type="Self.Borrows" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Books">
+              <PropertyRef Name="BookId" />
+            </Principal>
+            <Dependent Role="Borrows">
+              <PropertyRef Name="BookId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Borrows_Students">
+          <End Role="Students" Type="Self.Students" Multiplicity="1" />
+          <End Role="Borrows" Type="Self.Borrows" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Students">
+              <PropertyRef Name="StudentId" />
+            </Principal>
+            <Dependent Role="Borrows">
+              <PropertyRef Name="StudentId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Penalties_Borrows">
+          <End Role="Borrows" Type="Self.Borrows" Multiplicity="1" />
+          <End Role="Penalties" Type="Self.Penalties" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Borrows">
+              <PropertyRef Name="BorrowId" />
+            </Principal>
+            <Dependent Role="Penalties">
+              <PropertyRef Name="BorrowId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Students_RecordStatuses">
+          <End Role="RecordStatuses" Type="Self.RecordStatuses" Multiplicity="1" />
+          <End Role="Students" Type="Self.Students" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="RecordStatuses">
+              <PropertyRef Name="RecordStatusId" />
+            </Principal>
+            <Dependent Role="Students">
+              <PropertyRef Name="RecordStatusId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Users_RecordStatuses">
+          <End Role="RecordStatuses" Type="Self.RecordStatuses" Multiplicity="1" />
+          <End Role="Users" Type="Self.Users" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="RecordStatuses">
+              <PropertyRef Name="RecordStatusId" />
+            </Principal>
+            <Dependent Role="Users">
+              <PropertyRef Name="RecordStatusId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="LibraryDBModelStoreContainer">
+          <EntitySet Name="Books" EntityType="Self.Books" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Borrows" EntityType="Self.Borrows" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Genres" EntityType="Self.Genres" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Penalties" EntityType="Self.Penalties" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="RecordStatuses" EntityType="Self.RecordStatuses" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Students" EntityType="Self.Students" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Users" EntityType="Self.Users" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK_Books_Genres" Association="Self.FK_Books_Genres">
+            <End Role="Genres" EntitySet="Genres" />
+            <End Role="Books" EntitySet="Books" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Books_RecordStatuses" Association="Self.FK_Books_RecordStatuses">
+            <End Role="RecordStatuses" EntitySet="RecordStatuses" />
+            <End Role="Books" EntitySet="Books" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Borrows_Books" Association="Self.FK_Borrows_Books">
+            <End Role="Books" EntitySet="Books" />
+            <End Role="Borrows" EntitySet="Borrows" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Borrows_Students" Association="Self.FK_Borrows_Students">
+            <End Role="Students" EntitySet="Students" />
+            <End Role="Borrows" EntitySet="Borrows" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Penalties_Borrows" Association="Self.FK_Penalties_Borrows">
+            <End Role="Borrows" EntitySet="Borrows" />
+            <End Role="Penalties" EntitySet="Penalties" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Students_RecordStatuses" Association="Self.FK_Students_RecordStatuses">
+            <End Role="RecordStatuses" EntitySet="RecordStatuses" />
+            <End Role="Students" EntitySet="Students" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Users_RecordStatuses" Association="Self.FK_Users_RecordStatuses">
+            <End Role="RecordStatuses" EntitySet="RecordStatuses" />
+            <End Role="Users" EntitySet="Users" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="LibraryDBModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="Book">
+          <Key>
+            <PropertyRef Name="BookId" />
+          </Key>
+          <Property Name="BookId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="BookName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="GenreId" Type="Byte" Nullable="false" />
+          <Property Name="Author" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="PublishDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="UnitsInStock" Type="Int32" Nullable="false" />
+          <Property Name="RecordStatusId" Type="Byte" Nullable="false" />
+          <Property Name="CreatedDate" Type="DateTime" Nullable="false" Precision="3" />
+          <NavigationProperty Name="Genre" Relationship="Self.FK_Books_Genres" FromRole="Books" ToRole="Genres" />
+          <NavigationProperty Name="RecordStatus" Relationship="Self.FK_Books_RecordStatuses" FromRole="Books" ToRole="RecordStatuses" />
+          <NavigationProperty Name="Borrows" Relationship="Self.FK_Borrows_Books" FromRole="Books" ToRole="Borrows" />
+        </EntityType>
+        <EntityType Name="Borrow">
+          <Key>
+            <PropertyRef Name="BorrowId" />
+          </Key>
+          <Property Name="BorrowId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="StudentId" Type="Int32" Nullable="false" />
+          <Property Name="BookId" Type="Int32" Nullable="false" />
+          <Property Name="BeginDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="EndDate" Type="DateTime" Nullable="false" Precision="3" />
+          <NavigationProperty Name="Book" Relationship="Self.FK_Borrows_Books" FromRole="Borrows" ToRole="Books" />
+          <NavigationProperty Name="Student" Relationship="Self.FK_Borrows_Students" FromRole="Borrows" ToRole="Students" />
+          <Property Name="ReturnDate" Type="DateTime" Precision="3" />
+          <NavigationProperty Name="Penalties" Relationship="LibraryDBModel.FK_Penalties_Borrows" FromRole="Borrow" ToRole="Penalty" />
+        </EntityType>
+        <EntityType Name="Genre">
+          <Key>
+            <PropertyRef Name="GenreId" />
+          </Key>
+          <Property Name="GenreId" Type="Byte" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="GenreName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <NavigationProperty Name="Books" Relationship="Self.FK_Books_Genres" FromRole="Genres" ToRole="Books" />
+        </EntityType>
+        <EntityType Name="RecordStatus">
+          <Key>
+            <PropertyRef Name="RecordStatusId" />
+          </Key>
+          <Property Name="RecordStatusId" Type="Byte" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="RecordStatusName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <NavigationProperty Name="Books" Relationship="Self.FK_Books_RecordStatuses" FromRole="RecordStatuses" ToRole="Books" />
+          <NavigationProperty Name="Students" Relationship="Self.FK_Students_RecordStatuses" FromRole="RecordStatuses" ToRole="Students" />
+          <NavigationProperty Name="Users" Relationship="Self.FK_Users_RecordStatuses" FromRole="RecordStatuses" ToRole="Users" />
+        </EntityType>
+        <EntityType Name="Student">
+          <Key>
+            <PropertyRef Name="StudentId" />
+          </Key>
+          <Property Name="StudentId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="FirstName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="LastName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="StudentNumber" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="MobilePhone" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="EmailAdress" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="RecordStatusId" Type="Byte" Nullable="false" />
+          <Property Name="CreatedDate" Type="DateTime" Nullable="false" Precision="3" />
+          <NavigationProperty Name="Borrows" Relationship="Self.FK_Borrows_Students" FromRole="Students" ToRole="Borrows" />
+          <NavigationProperty Name="RecordStatus" Relationship="Self.FK_Students_RecordStatuses" FromRole="Students" ToRole="RecordStatuses" />
+        </EntityType>
+        <EntityType Name="User">
+          <Key>
+            <PropertyRef Name="UserId" />
+          </Key>
+          <Property Name="UserId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="FirstName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="LastName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="UserName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Password" Type="String" MaxLength="10" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="RecordStatusId" Type="Byte" Nullable="false" />
+          <NavigationProperty Name="RecordStatus" Relationship="Self.FK_Users_RecordStatuses" FromRole="Users" ToRole="RecordStatuses" />
+        </EntityType>
+        <Association Name="FK_Books_Genres">
+          <End Role="Genres" Type="Self.Genre" Multiplicity="1" />
+          <End Role="Books" Type="Self.Book" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Genres">
+              <PropertyRef Name="GenreId" />
+            </Principal>
+            <Dependent Role="Books">
+              <PropertyRef Name="GenreId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Books_RecordStatuses">
+          <End Role="RecordStatuses" Type="Self.RecordStatus" Multiplicity="1" />
+          <End Role="Books" Type="Self.Book" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="RecordStatuses">
+              <PropertyRef Name="RecordStatusId" />
+            </Principal>
+            <Dependent Role="Books">
+              <PropertyRef Name="RecordStatusId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Borrows_Books">
+          <End Role="Books" Type="Self.Book" Multiplicity="1" />
+          <End Role="Borrows" Type="Self.Borrow" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Books">
+              <PropertyRef Name="BookId" />
+            </Principal>
+            <Dependent Role="Borrows">
+              <PropertyRef Name="BookId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Borrows_Students">
+          <End Role="Students" Type="Self.Student" Multiplicity="1" />
+          <End Role="Borrows" Type="Self.Borrow" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Students">
+              <PropertyRef Name="StudentId" />
+            </Principal>
+            <Dependent Role="Borrows">
+              <PropertyRef Name="StudentId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Students_RecordStatuses">
+          <End Role="RecordStatuses" Type="Self.RecordStatus" Multiplicity="1" />
+          <End Role="Students" Type="Self.Student" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="RecordStatuses">
+              <PropertyRef Name="RecordStatusId" />
+            </Principal>
+            <Dependent Role="Students">
+              <PropertyRef Name="RecordStatusId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Users_RecordStatuses">
+          <End Role="RecordStatuses" Type="Self.RecordStatus" Multiplicity="1" />
+          <End Role="Users" Type="Self.User" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="RecordStatuses">
+              <PropertyRef Name="RecordStatusId" />
+            </Principal>
+            <Dependent Role="Users">
+              <PropertyRef Name="RecordStatusId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="LibraryDBEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="Books" EntityType="Self.Book" />
+          <EntitySet Name="Borrows" EntityType="Self.Borrow" />
+          <EntitySet Name="Genres" EntityType="Self.Genre" />
+          <EntitySet Name="RecordStatuses" EntityType="Self.RecordStatus" />
+          <EntitySet Name="Students" EntityType="Self.Student" />
+          <EntitySet Name="Users" EntityType="Self.User" />
+          <AssociationSet Name="FK_Books_Genres" Association="Self.FK_Books_Genres">
+            <End Role="Genres" EntitySet="Genres" />
+            <End Role="Books" EntitySet="Books" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Books_RecordStatuses" Association="Self.FK_Books_RecordStatuses">
+            <End Role="RecordStatuses" EntitySet="RecordStatuses" />
+            <End Role="Books" EntitySet="Books" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Borrows_Books" Association="Self.FK_Borrows_Books">
+            <End Role="Books" EntitySet="Books" />
+            <End Role="Borrows" EntitySet="Borrows" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Borrows_Students" Association="Self.FK_Borrows_Students">
+            <End Role="Students" EntitySet="Students" />
+            <End Role="Borrows" EntitySet="Borrows" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Students_RecordStatuses" Association="Self.FK_Students_RecordStatuses">
+            <End Role="RecordStatuses" EntitySet="RecordStatuses" />
+            <End Role="Students" EntitySet="Students" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Users_RecordStatuses" Association="Self.FK_Users_RecordStatuses">
+            <End Role="RecordStatuses" EntitySet="RecordStatuses" />
+            <End Role="Users" EntitySet="Users" />
+          </AssociationSet>
+          <EntitySet Name="Penalties" EntityType="LibraryDBModel.Penalty" />
+          <AssociationSet Name="FK_Penalties_Borrows" Association="LibraryDBModel.FK_Penalties_Borrows">
+            <End Role="Borrow" EntitySet="Borrows" />
+            <End Role="Penalty" EntitySet="Penalties" />
+          </AssociationSet>
+        </EntityContainer>
+        <EntityType Name="Penalty">
+          <Key>
+            <PropertyRef Name="PenaltyId" />
+          </Key>
+          <Property Name="PenaltyId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="BorrowId" Type="Int32" Nullable="false" />
+          <Property Name="Penalty1" Type="Decimal" Nullable="false" Precision="19" Scale="4" />
+          <NavigationProperty Name="Borrow" Relationship="LibraryDBModel.FK_Penalties_Borrows" FromRole="Penalty" ToRole="Borrow" />
+        </EntityType>
+        <Association Name="FK_Penalties_Borrows">
+          <End Type="LibraryDBModel.Borrow" Role="Borrow" Multiplicity="1" />
+          <End Type="LibraryDBModel.Penalty" Role="Penalty" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Borrow">
+              <PropertyRef Name="BorrowId" />
+            </Principal>
+            <Dependent Role="Penalty">
+              <PropertyRef Name="BorrowId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="LibraryDBModelStoreContainer" CdmEntityContainer="LibraryDBEntities">
+          <EntitySetMapping Name="Books">
+            <EntityTypeMapping TypeName="LibraryDBModel.Book">
+              <MappingFragment StoreEntitySet="Books">
+                <ScalarProperty Name="BookId" ColumnName="BookId" />
+                <ScalarProperty Name="BookName" ColumnName="BookName" />
+                <ScalarProperty Name="GenreId" ColumnName="GenreId" />
+                <ScalarProperty Name="Author" ColumnName="Author" />
+                <ScalarProperty Name="PublishDate" ColumnName="PublishDate" />
+                <ScalarProperty Name="UnitsInStock" ColumnName="UnitsInStock" />
+                <ScalarProperty Name="RecordStatusId" ColumnName="RecordStatusId" />
+                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Borrows">
+            <EntityTypeMapping TypeName="LibraryDBModel.Borrow">
+              <MappingFragment StoreEntitySet="Borrows">
+                <ScalarProperty Name="ReturnDate" ColumnName="ReturnDate" />
+                <ScalarProperty Name="BorrowId" ColumnName="BorrowId" />
+                <ScalarProperty Name="StudentId" ColumnName="StudentId" />
+                <ScalarProperty Name="BookId" ColumnName="BookId" />
+                <ScalarProperty Name="BeginDate" ColumnName="BeginDate" />
+                <ScalarProperty Name="EndDate" ColumnName="EndDate" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Genres">
+            <EntityTypeMapping TypeName="LibraryDBModel.Genre">
+              <MappingFragment StoreEntitySet="Genres">
+                <ScalarProperty Name="GenreId" ColumnName="GenreId" />
+                <ScalarProperty Name="GenreName" ColumnName="GenreName" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="RecordStatuses">
+            <EntityTypeMapping TypeName="LibraryDBModel.RecordStatus">
+              <MappingFragment StoreEntitySet="RecordStatuses">
+                <ScalarProperty Name="RecordStatusId" ColumnName="RecordStatusId" />
+                <ScalarProperty Name="RecordStatusName" ColumnName="RecordStatusName" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Students">
+            <EntityTypeMapping TypeName="LibraryDBModel.Student">
+              <MappingFragment StoreEntitySet="Students">
+                <ScalarProperty Name="StudentId" ColumnName="StudentId" />
+                <ScalarProperty Name="FirstName" ColumnName="FirstName" />
+                <ScalarProperty Name="LastName" ColumnName="LastName" />
+                <ScalarProperty Name="StudentNumber" ColumnName="StudentNumber" />
+                <ScalarProperty Name="MobilePhone" ColumnName="MobilePhone" />
+                <ScalarProperty Name="EmailAdress" ColumnName="EmailAdress" />
+                <ScalarProperty Name="RecordStatusId" ColumnName="RecordStatusId" />
+                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Users">
+            <EntityTypeMapping TypeName="LibraryDBModel.User">
+              <MappingFragment StoreEntitySet="Users">
+                <ScalarProperty Name="UserId" ColumnName="UserId" />
+                <ScalarProperty Name="FirstName" ColumnName="FirstName" />
+                <ScalarProperty Name="LastName" ColumnName="LastName" />
+                <ScalarProperty Name="UserName" ColumnName="UserName" />
+                <ScalarProperty Name="Password" ColumnName="Password" />
+                <ScalarProperty Name="RecordStatusId" ColumnName="RecordStatusId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Penalties">
+            <EntityTypeMapping TypeName="LibraryDBModel.Penalty">
+              <MappingFragment StoreEntitySet="Penalties">
+                <ScalarProperty Name="Penalty1" ColumnName="Penalty" />
+                <ScalarProperty Name="BorrowId" ColumnName="BorrowId" />
+                <ScalarProperty Name="PenaltyId" ColumnName="PenaltyId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="true" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>
